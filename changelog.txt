@@ -1,0 +1,21 @@
+0609e10_0.6343 0605原版改进，删除Video_embedding的SENet
+data处理 加入find_printable() 提升了
+
+删掉find printable 加入get_firstly 降分了
+
+get_firstly 改成取前64 + 后64
+
+在get_firstly中添加了find_printable和tf-idf
+
+TODO: 判断get_firstly 和 find_printable 之间的有效性
+
+TODO：VideoEmbeddings 传入同一个BertEmbeddings（已上线）
+
+TODO: MLM Support
+
+
+减小了BERT的lr
+
+EMA Support (PASS)
+
+
