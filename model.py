@@ -195,12 +195,17 @@ class MyModel(nn.Module):
         return outputs.reshape(-1, 32, 768)
 
     def forward(self, inputs, inference=False):
-        text_input_ids, text_lm_label = self.lm.torch_mask_tokens(inputs['title_input'].to('cpu'))
-        text_input_ids = text_input_ids.to(self.device)
-        text_lm_label = text_lm_label.to(self.device)
+        if self.args.mlm:
+            text_input_ids, text_lm_label = self.lm.torch_mask_tokens(inputs['title_input'].to('cpu'))
+            text_input_ids = text_input_ids.to(self.device)
+            text_lm_label = text_lm_label.to(self.device)
 
-        text_embedding = self.bert.embeddings(
-            text_input_ids, inputs['title_mask'])
+            text_embedding = self.bert.embeddings(
+                text_input_ids, inputs['title_mask'])
+        else:
+            text_embedding = self.bert.embeddings(
+                inputs['title_input'], inputs['title_mask']
+            )
         # Note: text_embedding.shape(bs, 50, 768)
 #         vision_embedding = self.nextvlad(
 #             inputs['frame_input'], inputs['frame_mask'])
@@ -220,10 +225,13 @@ class MyModel(nn.Module):
                                             return_dict=True)
         sequence_output = encoder_outputs[0]    # last_hidden_states
 
-        lm_prediction_scores = self.cls(sequence_output[:,:-inputs['frame_input'].size()[1],:]) # 只传入Text信息
-        # lm_prediction_scores = self.fit_lm_linear(lm_prediction_scores)
-        pred = lm_prediction_scores.contiguous().view(-1, self.bert_cfg.vocab_size)
-        masked_lm_loss = nn.CrossEntropyLoss()(pred, text_lm_label.view(-1)) / 1.25 / 3
+        if self.args.mlm:
+            # calculate masked mlm loss
+
+            lm_prediction_scores = self.cls(sequence_output[:,:-inputs['frame_input'].size()[1],:]) # 只传入Text信息
+            # lm_prediction_scores = self.fit_lm_linear(lm_prediction_scores)
+            pred = lm_prediction_scores.contiguous().view(-1, self.bert_cfg.vocab_size)
+            masked_lm_loss = nn.CrossEntropyLoss()(pred, text_lm_label.view(-1)) / 1.25 / 3
 
         # [:, :-inputs['frame_input'].size()[1], :]# Cut Video Feature Part
 
@@ -251,9 +259,12 @@ class MyModel(nn.Module):
 
         if inference:
             return torch.argmax(prediction, dim=1)
-        else:
+        elif self.args.mlm:
+            # training mode with mlm
             return self.cal_loss(prediction, inputs['label'], masked_lm_loss)
-            # return self.cal_loss(prediction, inputs['label'])
+        else:
+            # training mode without mlm
+            return self.cal_loss(prediction, inputs['label'])
 
     @staticmethod
     def cal_loss(prediction, label, masked_lm_loss=None):
