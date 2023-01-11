@@ -53,7 +53,7 @@ def parse_args():
     parser.add_argument('--se_ratio', type=int, default=8, help='reduction factor in se context gating')
 
     # ========================== Fusion Layer =============================
-    parser.add_argument('--fc_size', type=int, default=512, help="linear size before final linear")
+    parser.add_argument('--fc_size', type=int, default=1024, help="linear size before final linear")
 
     # ========================== Custom =============================
     parser.add_argument('--ema', action="store_true", help="Add ema support")
