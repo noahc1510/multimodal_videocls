@@ -178,8 +178,8 @@ class MyModel(nn.Module):
         self.fusion = ConcatDenseSE(
             args.vlad_hidden_size + self.bert_output_size, args.fc_size, args.se_ratio, args.dropout)
         self.cls = BertOnlyMLMHead(self.bert_cfg)
-        self.newfc_hidden = torch.nn.Linear(21128, 768)
-        self.classifier = nn.Linear(768, len(CATEGORY_ID_LIST))
+        self.newfc_hidden = torch.nn.Linear(21128, 512)
+        self.classifier = nn.Linear(512, len(CATEGORY_ID_LIST))
 
         self.cls_head = ClassificationHead(self.bert_cfg.vocab_size,
                                            linear_layer_size=[1024, 512],
@@ -207,9 +207,9 @@ class MyModel(nn.Module):
                 inputs['title_input'], inputs['title_mask']
             )
         # Note: text_embedding.shape(bs, 50, 768)
-#         vision_embedding = self.nextvlad(
-#             inputs['frame_input'], inputs['frame_mask'])
-# #         vision_embedding = self.enhance(vision_embedding)
+        vision_embedding = self.nextvlad(
+            inputs['frame_input'], inputs['frame_mask'])
+        # vision_embedding = self.enhance(vision_embedding)
 #         fit_vision_embedding = self.fit_dims(vision_embedding)
         fit_vision_embedding = self.newfit_linear(inputs['frame_input'])# 缓解异质空间问题
         vision_bert_embedding = self.video_embedding(inputs_embeds=fit_vision_embedding)
@@ -249,12 +249,12 @@ class MyModel(nn.Module):
         mean_embeddings = self.last_meanpooling(sequence_output, all_masks)
 #         mean_embeddings = torch.einsum("bsh,bs,b->bh", sequence_output, all_masks.float(), 1 / all_masks.float().sum(dim=1) + 1e-9)
 
-#         vision_embedding = self.enhance(vision_embedding)
-#         final_embedding = self.fusion([vision_embedding, mean_embeddings])
-#         final_embedding = self.newfc_hidden(mean_embeddings)
+        vision_embedding = self.enhance(vision_embedding)
+        final_embedding = self.fusion([vision_embedding, mean_embeddings])
+        # final_embedding = self.newfc_hidden(final_embedding)
 #         prediction = self.classifier(final_embedding)
 #         prediction = self.cls_head(mean_embeddings)
-        prediction = self.classifier(mean_embeddings)
+        prediction = self.classifier(final_embedding)
         # prediction = lm_prediction_scores.contiguous().view(-1, len(CATEGORY_ID_LIST))
 
         if inference:
