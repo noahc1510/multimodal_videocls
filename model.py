@@ -254,6 +254,7 @@ class MyModel(nn.Module):
         # final_embedding = self.newfc_hidden(final_embedding)
 #         prediction = self.classifier(final_embedding)
 #         prediction = self.cls_head(mean_embeddings)
+        test_var = self.cls_head(final_embedding)
         prediction = self.classifier(final_embedding)
         # prediction = lm_prediction_scores.contiguous().view(-1, len(CATEGORY_ID_LIST))
 
