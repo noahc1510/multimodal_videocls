@@ -185,8 +185,9 @@ class MyModel(nn.Module):
                                            linear_layer_size=[1024, 512],
                                            hidden_dropout_prob=0.2,
                                            num_label=len(CATEGORY_ID_LIST))
+        # TODO: EDITED FLAG
         # self.newfit_linear = nn.Linear(768, 768)
-
+        self.newfit_linear = nn.Linear(4096, 4096)
         # self.fit_lm_linear = nn.Linear(self.bert_cfg.vocab_size, 1)
         
 
