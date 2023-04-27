@@ -179,8 +179,9 @@ class MyModel(nn.Module):
             args.vlad_hidden_size + self.bert_output_size, args.fc_size, args.se_ratio, args.dropout)
         self.cls = BertOnlyMLMHead(self.bert_cfg)
         self.newfc_hidden = torch.nn.Linear(21128, 512)
-        self.classifier = nn.Linear(512, len(CATEGORY_ID_LIST))
-
+        # TODO:EDITED FLAG
+        # self.classifier = nn.Linear(512, len(CATEGORY_ID_LIST))
+        self.classifier = nn.Linear(768, len(CATEGORY_ID_LIST))
         self.cls_head = ClassificationHead(self.bert_cfg.vocab_size,
                                            linear_layer_size=[1024, 512],
                                            hidden_dropout_prob=0.2,
