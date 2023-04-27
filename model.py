@@ -185,7 +185,8 @@ class MyModel(nn.Module):
                                            linear_layer_size=[1024, 512],
                                            hidden_dropout_prob=0.2,
                                            num_label=len(CATEGORY_ID_LIST))
-        self.newfit_linear = nn.Linear(768, 768)
+        # self.newfit_linear = nn.Linear(768, 768)
+
         # self.fit_lm_linear = nn.Linear(self.bert_cfg.vocab_size, 1)
         
 
@@ -207,8 +208,11 @@ class MyModel(nn.Module):
                 inputs['title_input'], inputs['title_mask']
             )
         # Note: text_embedding.shape(bs, 50, 768)
-        vision_embedding = self.nextvlad(
-            inputs['frame_input'], inputs['frame_mask'])
+
+        # TODO: edited flag
+        # vision_embedding = self.nextvlad(
+        #     inputs['frame_input'], inputs['frame_mask'])
+
         # vision_embedding = self.enhance(vision_embedding)
 #         fit_vision_embedding = self.fit_dims(vision_embedding)
         fit_vision_embedding = self.newfit_linear(inputs['frame_input'])# 缓解异质空间问题
@@ -249,15 +253,18 @@ class MyModel(nn.Module):
         mean_embeddings = self.last_meanpooling(sequence_output, all_masks)
 #         mean_embeddings = torch.einsum("bsh,bs,b->bh", sequence_output, all_masks.float(), 1 / all_masks.float().sum(dim=1) + 1e-9)
 
-        vision_embedding = self.enhance(vision_embedding)
-        final_embedding = self.fusion([vision_embedding, mean_embeddings])
+        # TODO: EDITED Flag
+        # vision_embedding = self.enhance(vision_embedding)
+        # final_embedding = self.fusion([vision_embedding, mean_embeddings])
+        # prediction = self.classifier(final_embedding)
+
         # final_embedding = self.newfc_hidden(final_embedding)
 #         prediction = self.classifier(final_embedding)
 #         prediction = self.cls_head(mean_embeddings)
-        test_var = self.cls_head(final_embedding)
-        prediction = self.classifier(final_embedding)
+#         test_var = self.cls_head(final_embedding)
+#         prediction = self.classifier(final_embedding)
         # prediction = lm_prediction_scores.contiguous().view(-1, len(CATEGORY_ID_LIST))
-
+        prediction = self.classifier(mean_embeddings)
         if inference:
             return torch.argmax(prediction, dim=1)
         elif self.args.mlm:

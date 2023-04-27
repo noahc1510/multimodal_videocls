@@ -60,7 +60,7 @@ def parse_args():
     parser.add_argument('--fgm', action="store_true", help="Add fgm support")
     parser.add_argument('--pgd', action="store_true", help="Add fgd support")
     parser.add_argument('--mlm', action="store_true", help="Add mlm support")
-    parser.add_argument('--amp', action='store_true', help="Training with automatic mixed precision technology") # Not available currectly
+    parser.add_argument('--amp', action='store_true', help="Training with automatic mixed precision technology") # Not available currently
 
     # parser.add_argument("--")
 
