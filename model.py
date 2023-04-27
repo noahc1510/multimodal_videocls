@@ -187,7 +187,7 @@ class MyModel(nn.Module):
                                            num_label=len(CATEGORY_ID_LIST))
         # TODO: EDITED FLAG
         # self.newfit_linear = nn.Linear(768, 768)
-        self.newfit_linear = nn.Linear(4096, 4096)
+        self.newfit_linear = nn.Linear(4096, 768)
         # self.fit_lm_linear = nn.Linear(self.bert_cfg.vocab_size, 1)
         
 
