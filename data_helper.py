@@ -141,7 +141,7 @@ class MultiModalDataset(Dataset):
 
         # Step 2, load title tokens
         # title_input, title_mask = self.tokenize_text(self.anns[idx]['title'])
-#         total_text = self.anns[idx]['title'] + self.anns[idx]['asr']
+        total_text = self.anns[idx]['title'] + self.anns[idx]['asr']
 #         # print(len(self.anns[idx]['asr']))
 #         total_ocr = ''
 #         for i in self.anns[idx]['ocr']:
@@ -156,7 +156,6 @@ class MultiModalDataset(Dataset):
 #         #     total_keywords += keyword
 # #         total_text = find_printable(total_text)
 #         total_text += total_ocr
-        total_text = self.anns[idx]['title']
         total_text = find_printable(total_text)
 #         if len(total_text) < 512:
 #             total_text += total_keywords
