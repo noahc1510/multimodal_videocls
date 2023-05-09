@@ -222,8 +222,8 @@ class MyModel(nn.Module):
         
         # all_embeddings = torch.cat([text_embedding, vision_bert_embedding], 1)
         # all_masks = torch.cat([inputs['title_mask'], inputs['frame_mask']], 1)
-        all_embeddings = torch.cat([vision_bert_embedding], 1)
-        all_masks = torch.cat([inputs['frame_mask']], 1)
+        all_embeddings = torch.cat([text_embedding], 1)
+        all_masks = torch.cat([inputs['title_mask']], 1)
         extened_attention_mask = self.bert.get_extended_attention_mask(
             all_masks, all_masks.size(), device=self.device)
 
