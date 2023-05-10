@@ -141,22 +141,8 @@ class MultiModalDataset(Dataset):
 
         # Step 2, load title tokens
         # title_input, title_mask = self.tokenize_text(self.anns[idx]['title'])
-        total_text = self.anns[idx]['title'] + self.anns[idx]['asr']
-        # print(len(self.anns[idx]['asr']))
-        total_ocr = ''
-        for i in self.anns[idx]['ocr']:
-            text = i['text']
-            total_ocr += text
-
-        # from jieba import analyse
-        # tfidf = analyse.extract_tags
-        # keywords = tfidf(self.anns[idx]['title'] + self.anns[idx]['asr'] + total_ocr)
-        # total_keywords = ""
-        # for keyword in keywords:
-        #     total_keywords += keyword
-#         total_text = find_printable(total_text)
-        total_text += total_ocr
-        total_text = find_printable(total_text)
+        total_text = self.anns[idx]['title']
+        # total_text = find_printable(total_text)
 #         if len(total_text) < 512:
 #             total_text += total_keywords
         title_input, title_mask = self.tokenize_text(total_text)
