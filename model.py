@@ -214,8 +214,8 @@ class MyModel(nn.Module):
         fit_vision_embedding = self.newfit_linear(inputs['frame_input'])# 缓解异质空间问题
         vision_bert_embedding = self.video_embedding(inputs_embeds=fit_vision_embedding)
         
-        all_embeddings = torch.cat([text_embedding, vision_bert_embedding], 1)
-        all_masks = torch.cat([inputs['title_mask'], inputs['frame_mask']], 1)
+        all_embeddings = torch.cat([text_embedding], 1)
+        all_masks = torch.cat([inputs['title_mask']], 1)
         extened_attention_mask = self.bert.get_extended_attention_mask(
             all_masks, all_masks.size(), device=self.device)
 
