@@ -156,7 +156,7 @@ class MultiModalDataset(Dataset):
         #     total_keywords += keyword
 #         total_text = find_printable(total_text)
         total_text += total_ocr
-        # total_text = find_printable(total_text)
+        total_text = find_printable(total_text)
 #         if len(total_text) < 512:
 #             total_text += total_keywords
         title_input, title_mask = self.tokenize_text(total_text)
