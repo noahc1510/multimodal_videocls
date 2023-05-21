@@ -148,13 +148,13 @@ class MultiModalDataset(Dataset):
             text = i['text']
             total_ocr += text
 
-        # from jieba import analyse
-        # tfidf = analyse.extract_tags
-        # keywords = tfidf(self.anns[idx]['title'] + self.anns[idx]['asr'] + total_ocr)
-        # total_keywords = ""
-        # for keyword in keywords:
-        #     total_keywords += keyword
-#         total_text = find_printable(total_text)
+        from jieba import analyse
+        tfidf = analyse.extract_tags
+        keywords = tfidf(self.anns[idx]['title'] + self.anns[idx]['asr'] + total_ocr)
+        total_keywords = ""
+        for keyword in keywords:
+            total_keywords += keyword
+        # total_text = find_printable(total_text)
         total_text += total_ocr
         total_text = find_printable(total_text)
 #         if len(total_text) < 512:
